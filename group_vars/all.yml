@@ -1,0 +1,5 @@
+---
+syslog_server: "10.0.0.1"
+ntp_server: "10.0.0.2"
+snmp_community: "cisco.123"
+domain_name: "cisco.com"

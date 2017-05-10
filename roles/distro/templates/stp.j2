@@ -1,0 +1,5 @@
+spanning-tree mode rapid-pvst
+spanning-tree portfast edge default
+spanning-tree portfast edge bpduguard default
+spanning-tree vlan {{ stp.root_primary }} priority 4096
+spanning-tree vlan {{ stp.root_secondary }} priority 8192

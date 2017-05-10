@@ -1,0 +1,11 @@
+[distro]
+distro-1 ansible_host=172.16.1.110
+distro-2 ansible_host=172.16.1.111
+
+[access]
+access-1 ansible_host=172.16.1.108
+access-2 ansible_host=172.16.1.109
+
+[switches:children]
+distro
+access

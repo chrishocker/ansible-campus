@@ -1,0 +1,14 @@
+---
+- name: Test Playbook
+  hosts: all
+  gather_facts: no
+  connection: local
+  vars_files: 
+    - secrets.yml
+
+  tasks:
+
+    - name: Configure Hostname
+      ios_config:
+        lines: hostname {{ inventory_hostname }}
+        provider: "{{ cli }}"

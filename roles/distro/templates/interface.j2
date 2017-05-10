@@ -1,0 +1,4 @@
+{% for key,value in interfaces|dictsort + loopbacks|dictsort %}
+interface {{ key }}
+  ip address {{ value.ip|ipaddr('address') }} {{ value.ip|ipaddr('netmask') }}
+{% endfor %}

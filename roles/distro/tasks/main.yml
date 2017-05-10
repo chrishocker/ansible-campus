@@ -1,0 +1,74 @@
+---
+
+  - name: Configure VLANs
+    ios_config:
+      src: templates/vlan.j2
+      provider: "{{ cli }}"
+    tags: vlan
+
+  - name: Configure STP
+    ios_config:
+      src: stp.j2
+      provider: "{{ cli }}"
+    tags: stp
+
+#  - name: default interface config
+#    ios_config:
+#      src: default-interface.j2
+#      provider: "{{ cli }}"
+#    tags: default-interface
+
+  - name: Configure Downlinks
+    ios_config:
+      lines:
+        - description {{ item.description }}
+        - switchport mode trunk
+        - switchport trunk encapsulation dot1q
+        #- switchport trunk allowed vlan {{ allowed_vlans|default('all') }}
+        - switchport trunk native vlan 1000
+      provider: "{{ cli }}"
+      parents: "interface {{ item.port }}"
+      match: line
+    with_items: "{{ downlinks }}"
+    tags: downlinks
+
+  # interfaces
+  - name: Configure SVIs
+    ios_config:
+      src: svi.j2
+      provider: "{{ cli }}"
+    tags: svi
+
+#  - name: Configure SVIs
+#    ios_config:
+#      lines:
+#        - description {{ item.key }}
+#      provider: "{{ cli }}"
+#      parents: "interface Vlan{{ item.value.id }}"
+#      match: line
+#    with_dict: "{{ vlans }}"
+#    when: item.value.subnet is defined
+#    tags: svi
+
+  - name: Configure HSRP
+    ios_config:
+      lines:
+        - standby version 2
+        - standby 1 timers msec 500 msec 750
+        - standby 1 ip {{ item.value.hsrp_vip }}
+      parents: "interface Vlan{{ item.value.id }}"       
+      provider: "{{ cli }}"
+    with_dict: "{{ vlans }}"
+    when: item.value.subnet is defined
+    tags: hsrp
+
+  - name: Configure L3 Interfaces
+    ios_config:
+      lines:
+        - description item.value.description
+        - no switchport
+        - ip address {{ item.value.ip|ipaddr('address') }} {{ item.value.ip|ipaddr('netmask')}}
+      provider: "{{ cli }}"
+      parents: "interface {{ item.key }}"
+    with_dict: "{{ interfaces }}"
+    tags: l3-interface

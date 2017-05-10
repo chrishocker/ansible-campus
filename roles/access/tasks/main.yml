@@ -1,0 +1,37 @@
+---
+
+  - name: Configure VLANs
+    ios_config:
+      src: templates/vlan.j2
+      provider: "{{ cli }}"
+    tags: vlan
+
+  - name: Configure STP
+    ios_config:
+      src: stp.j2
+      provider: "{{ cli }}"
+    tags: stp
+
+#  - name: default interface config
+#    ios_config:
+#      src: default-interface.j2
+#    tags: default-interface
+
+  #- name: access port config
+  #  ios_config:
+  #    src: templates/access-ports.j2
+  #  tags: access-port
+
+  - name: Configure Uplinks
+    ios_config:
+      lines:
+        - description {{ item.description }}
+        - switchport mode trunk
+        - switchport trunk encapsulation dot1q
+        - switchport trunk allowed vlan {{ allowed_vlans|default('all') }}
+        - switchport trunk native vlan 1000
+      provider: "{{ cli }}"
+      parents: "interface {{ item.port }}"
+      match: line
+    with_items: "{{ uplinks }}"
+    tags: uplinks

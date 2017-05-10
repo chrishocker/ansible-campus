@@ -1,0 +1,19 @@
+---
+# Specify a range or individual port to be trunk or access.
+# If you wanted to implement port-channel, just add the 'group' attribute
+# in the list of dictionaries.
+downlinks:
+  - { port: "GigabitEthernet0/1", description: -> access-1 }
+  - { port: "GigabitEthernet0/2", description: -> access-2 }
+
+svi_id: 1
+
+interfaces:
+  GigabitEthernet0/3: { ip: 172.16.100.1/30, routed: true, description: -> distro-2 }
+
+loopbacks:
+  lo0: { ip: 10.250.0.20/32 }
+
+stp:
+  root_primary: "1-2048"
+  root_secondary: "2049-4094"

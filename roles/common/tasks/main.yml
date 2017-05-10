@@ -1,0 +1,7 @@
+---
+
+  - name: Configuring Common Template
+    ios_config:
+      src: templates/common.j2
+      provider: "{{ cli }}"
+    tags: common

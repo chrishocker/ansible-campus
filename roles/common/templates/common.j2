@@ -1,0 +1,6 @@
+hostname {{ inventory_hostname }}
+ip domain-name {{ domain_name }}
+logging host {{ syslog_server }}
+ntp server {{ ntp_server }}
+snmp-server community {{ snmp_community }} RO
+vtp mode transparent

@@ -1,0 +1,22 @@
+---
+
+- name: Configure Distribution Switches
+  hosts: distro
+  connection: local
+  gather_facts: no
+  vars_files: 
+    - secrets.yml
+  roles:
+    - role: common
+    - role: distro
+
+- name: Configure Access Switches
+  hosts: access
+  connection: local
+  gather_facts: no
+  vars_files: 
+    - secrets.yml
+  roles:
+    - role: common
+    - role: access
+

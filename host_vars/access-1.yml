@@ -1,0 +1,28 @@
+---
+vlan_01:
+  accounting: { id: 30, subnet: 10.1.30.0/24, root: distro-1, hsrp_vip: 10.1.30.3 }
+  management: { id: 31,  subnet: 10.1.31.0/24, root: distro-1, hsrp_vip: 10.1.31.3 }
+  voice01: { id: 10, subnet: 10.1.10.0/24, root: distro-1, hsrp_vip: 10.1.10.3 }
+  test: { id: 88, subnet: 10.88.88.0/24, root: distro-1, hsrp_vip: 10.88.88.3 }
+
+vlans: "{{ vlan_01|combine(vlan_02) }}"
+
+# Specify a range or individual port to be trunk or access.
+# If you wanted to implement port-channel, just add the 'group' attribute
+# in the list of dictionaries.
+access_ports:
+  - ports:
+      - 'Gi1/0 - 1'
+      - 'Gi2/0'
+    data: accounting
+    voice: voice01
+  - ports:
+      - 'Gi1/2 - 3'
+    data: management
+    voice: voice01
+
+uplinks:
+  - { port: "GigabitEthernet0/1", description: -> distro-1 }
+  - { port: "GigabitEthernet0/2", description: -> distro-2 }
+
+allowed_vlans: "{{ vlans.values()|map(attribute='id')|list|sort|join(',') }}"

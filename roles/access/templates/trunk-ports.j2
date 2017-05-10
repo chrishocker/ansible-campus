@@ -1,0 +1,15 @@
+{% for item in uplinks -%}
+
+{% for trunk in item.port %}
+interface {{ trunk }}
+  {% if item.description is defined -%}
+  description {{ item.description }}
+  {% endif -%}
+  switchport mode trunk
+  switchport trunk encapsulation dot1q
+  switchport trunk allowed vlan {{ allowed_vlans|default('all') }}
+  switchport trunk native vlan {{ vlan_02['native'].id }}
+  
+{% endfor %}
+
+{% endfor %}

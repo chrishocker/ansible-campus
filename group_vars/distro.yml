@@ -1,0 +1,2 @@
+---
+vlans: "{{ hostvars['access-1']['vlan_01']|combine(hostvars['access-2']['vlan_01'])|combine(vlan_02) }}"
